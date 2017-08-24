@@ -1,0 +1,430 @@
+\documentclass[journal]{IEEEtran}
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+\usepackage{color}				
+\usepackage{url}
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+\usepackage[pdftex]{graphicx}
+\else
+\fi
+
+\usepackage{subcaption}
+
+% *** MATH PACKAGES ***
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsthm}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\sinc}{sinc}
+\newcommand\undermat[2]{%
+	\makebox[0pt][l]{$\smash{\underbrace{\phantom{%
+					\begin{matrix}#2 \end{matrix}}}_{\text{$#1$}}}$}#2}
+\newtheorem{theorem}{Theorem}
+
+
+% *** SI UNIT PACKAGE ***
+\usepackage{siunitx}
+\sisetup{detect-all}
+
+% *** FLOAT PACKAGES ***
+\usepackage{subcaption}
+\usepackage{multirow}
+
+
+% *** USEFUL COMMANDS ***
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\mathsf{#1}}
+\newcommand{\ser}[2]{#1^{#2}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+% *** TIKZ SETTINGS***
+\input{tikz_settings}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Pulse-stream models in ultrasound imaging}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{Adrien~Besson,~\IEEEmembership{Student member}
+        Rafael~E.~Carrillo,~\IEEEmembership{Member}
+        Dimitris~Perdios,~\IEEEmembership{Student member}
+        Marcel~Arditi,~\IEEEmembership{Member},
+        Yves~Wiaux,
+        Jean-Philippe Thiran,~\IEEEmembership{Senior member}% <-this % stops a space
+\thanks{A.~Besson, D.~Perdios, M.~Arditi and J.-Ph.~Thiran are with the Signal Processing Laboratory 5~(LTS5), Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne, CH-1015, Lausanne, Switzerland.}% 
+\thanks{R. Carrillo is with the Centre Suisse d'\'{e}lectronique et microtechnique~(CSEM), 2002 Neuch\^{a}tel, Switzerland.}%
+\thanks{Y. Wiaux is with the Institute of Sensors, Signals and Systems, Heriot-Watt University, EH14 4AS Edinburgh, United-Kingdom.}% <-this % stops a space
+\thanks{J.-Ph. Thiran is also with the Department of Radiology, University Hospital Center~(CHUV) and University of Lausanne~(UNIL), CH-1011, Lausanne, Switzerland.}}% <-this % stops a space
+
+% The paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+% 
+% *** Note that you probably will NOT want to include the author's ***
+% *** name in the headers of peer review papers.                   ***
+% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+% you desire.
+
+
+
+
+% If you want to put a publisher's ID mark on the page you can do it like
+% this:
+%\IEEEpubid{0000--0000/00\$00.00~\copyright~2015 IEEE}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark.
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+	This paper considers the problem of reconstructing ultrasound~(US) element raw-data from random projections. It presents a new signal model, coined as \textit{multi-channel ultrasound pulse-stream model}, which exploits the pulse-stream models of US signals and accounts for the inter-sensor dependencies. We propose a sampling theorem and a reconstruction algorithm, based on $\ell_1$-minimization, for signals belonging to such a model. We show the benefits of the proposed approach through numerical simulations on \num{1}D-signals and on \text{in vivo} carotid images. 
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+Compressed sensing, sparsity, ultrasound imaging
+\end{IEEEkeywords}
+
+
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+\label{sec_intro}
+\begin{figure}[htb]
+	\centering
+	\input{figures/tikz_fig_continuous}
+	\caption{Standard 2D ultrasound imaging configuration.}
+	\label{fig_pulse_echo}
+\end{figure}
+Pulse-echo ultrasound~(US) imaging is based on the transmission of short acoustic pulses through the human body. When such pulses encounter medium inhomogeneities, part of their energy is reflected back to the array of transducer-elements. The received signals, denoted as element-raw data, consist of backscattered echoes from the medium. Ultrafast US imaging is one specific modality of pulse-echo imaging which exploits the transmission of plane waves~(PW) or diverging waves in order to insonify the whole medium at once~\cite{Tanter_UFFC_2014}. Formally, let us assume that the transducer array is made of $N_{el}$ elements, positioned at $\left(\ser{\vect{r}_{ts}}{p}\right)_{p=1}^{N_{el}}$, as described on Figure~\ref{fig_pulse_echo}. Let us also consider that the medium is made of $K$ point-scatterers positioned at $\left(\vect{r}^k\right)_{k=1}^K$. The signal $m_{p} \left(t\right)$ received at the $p$-th element can be expressed as~\cite{Chernyakova2014, Tur_TSP_2012}:
+\begin{equation}
+\label{eq_raw_data_ultrafast}
+m_{p} \left(t\right) = \sum \limits_{k=1}^{K} a_k h\left(t - \ser{t_p}{k}\right), 
+\end{equation}
+where $a_k$ and $\ser{t_p}{k}$ are the amplitude and delay of the $k$-th point-scatterer and $h\left(t\right)$ is the pulse. In the remainder of the paper, we will consider that the pulse is known and that it can be written as $h\left(t\right) = \left(e \ast h_{ea} \ast h_{ae}\right)\left(t\right)$, where $e\left(t\right)$ is the excitation signal, $h_{ea}\left(t\right)$ is the electro-acoustical impulse response of the transducer elementand $h_{ae}\left(t\right)$ is the acousto-electrical impulse response of the transducer element~\cite{Jensen_UFFC_1992}.
+
+In the case of US imaging, it is possible to relate the time instant $\ser{t_p}{k}$ to the positions of the point-scatterer~$\ser{\vect{r}}{k}$ and the transducer element~$\ser{\vect{r}_{ts}}{p}$ using the following relationship~\cite{montaldo_uffc_2014}:
+\begin{equation}
+\label{eq_usdelay}
+\ser{t_p}{k} = t_{Tx}\left(\vect{r}^k\right) + t_{Rx}\left(\vect{r}^k, \ser{\vect{r}_{ts}}{p}\right),
+\end{equation}
+where $t_{Tx}\left(\vect{r}^k\right)$ is the propagation delay in transmit ~\cite{montaldo_uffc_2014, Papadacci_UFFC_2014}, and $t_{Rx}\left(\vect{r}^k, \ser{\vect{r}_{ts}}{p}\right)~=~\frac{\|\vect{r}^k - \ser{\vect{r}_{ts}}{p}\|_2}{c}$ is the propagation delay in receive, as described on Figure~\ref{fig_pulse_echo}.
+
+The notion of \textit{pulse stream} has been introduced by Hedge and Baraniuk~\cite{Hedge_TSP_2011} and designates signals that can be expressed as a convolution between a $K$-sparse spike train and a $F$-sparse impulse response. Two main approaches for recovery of pulse-stream signals have been studied. 
+
+The first approach models the pulse stream using the finite rate of innovation~(FRI) framework, which defines sampling theorems and kernels for impulse signals~\cite{Vetterli_TSP_2002}. Indeed, pulse streams can be seen as parametric signals, entirely defined by the amplitudes and delays of the spike train and one may be able to recover the pulse streams with only $2K$ samples. Tur~\etal{}~\cite{Tur_TSP_2012} as well as Chernyakova~\etal{}~\cite{Chernyakova2014} have applied this framework to US imaging, leading to significant data-rate reduction.
+
+The second approach, which is of interest in this work, exploits sparse representations in the context of the compressed-sensing~(CS) framework~\cite{Candes_SPM_2008}. Indeed, pulse streams are $K$-sparse in the dictionary made of circular shifts of the impulse response~\cite{Naini_ICASSP_2009}. Thus, one may perfectly recover pulse streams from few samples using convex optimization algorithms or greedy approaches~\cite{Hedge_TSP_2011, Naini_ICASSP_2009, Tsagkatakis_ICASSP_2014}.
+
+Formally, let us consider a pulse stream $\vect{z} \in \mathbb{R}^N$, such that $\vect{z} = \vect{h} \ast \vect{s}$ with $\vect{s} \in \mathbb{R}^N$ the $K$-sparse spike train and $\vect{h} \in \mathbb{R}^N$ the $F$-sparse impulse response.
+\begin{defn}[Definition 2 of \cite{Hedge_TSP_2011}]	
+The pulse-stream model is defined as follows:
+\begin{equation}
+\label{eq_pulse_stream_model}
+\mathcal{M}^z_{K,F}:=\left\lbrace \vect{z} \in \mathbb{R}^N: \vect{z} = \vect{s} \ast \vect{h} \; | \; \vect{s} \in \mathcal{M}_K \textnormal{ and } \vect{h} \in \mathcal{M}_F \right \rbrace,
+\end{equation}
+where $\mathcal{M}_K \subset \mathbb{R}^N$ and $\mathcal{M}_F \subset \mathbb{R}^N$ are restricted unions of $L_K$ $K$-dimensional and $L_F$ $F$-dimensional canonical subspaces, respectively.
+\end{defn} 
+
+
+For signals belonging to the pulse-stream model $\mathcal{M}^z_{K,F}$, Hedge and Baraniuk~\cite{Hedge_TSP_2011} have derived a sampling theorem where the number of measurements necessary for perfect reconstruction scales linearly with $K + F$ instead of $KF$~(standard CS). In the proposed work, we apply the concept of pulse-stream models to US imaging described in the first part of this introduction. Starting from the model described in Equation~\eqref{eq_raw_data_ultrafast}, we consider inter-channel dependencies in order to derive an additional structure of the US signals. This structure, expressed as restrictions on the possible support of the US signals, leads us to define a new model, denoted as \textit{multi-channel US pulse streams}, from which we present a sampling theorem and a recovery algorithm.
+
+The remainder of the paper is organized as follows. In Section~\ref{sec_pulsestreams_US}, the signal model is presented, with the corresponding sampling theorem and recovery algorithm. Section~\ref{sec_exp} presents results on synthetic pulse streams as well as on simulated US images. Concluding remarks are given in Section~\ref{sec_concl}.
+
+\section{Signal models for pulse streams in ultrasound imaging}
+\label{sec_pulsestreams_US}
+\subsection{Ultrasound channel recovery from a pulse-stream model}
+\label{subsec_US_pulsestream}
+From Equation~\eqref{eq_raw_data_ultrafast}, one may express the signal $m_p\left(t\right)$ as $m_p\left(t\right) = \left(s \ast h\right)\left(t\right)$, where $s \left(t\right) = \sum \limits_{k=1}^{K} a_k \delta\left(t - \ser{t_p}{k}\right)$ and $h\left(t\right)$ is the pulse. 
+
+Let us consider that the signal $m_p \left(t\right)$ is sampled at a rate $f_s$, leading to $N$ samples $ m_p \left(\ser{t}{i}\right)$, with $\ser{t}{i}= \ser{t}{0} + i/f_s$ for $i \in \left\lbrace 1,\dots,N \right\rbrace$.
+
+The vector $\vect{m}_p = \left[m_p\left(\ser{t}{1}\right),\dots,m_p\left(\ser{t}{N}\right)\right]^T \in \mathbb{R}^N$ belongs to the pulse-stream model $\mathcal{M}^z_{K,F}$ where $F$ denotes the size of the support of $\vect{h} \in \mathbb{R}^N$, supposed to be small compared to $N$ and $K$ the number of point-scatterers.
+
+Thus, one may be able to sample US signals at a rate dictated by Hedge and Baraniuk~\cite{Hedge_TSP_2011} while ensuring a perfect recovery. Moreover, since the pulse is supposed to be known, the following convex problem can be solved to retrieve $\vect{m}_p$ from noisy measurements $\vect{y} = \mathsf{\Phi} \vect{m}_p + \vect{n}$, with $\mathsf{\Phi} \in \mathbb{R}^{M \times N}$ a Gaussian \textit{i.i.d.} matrix:
+\begin{equation}
+\label{eq_l1_BPDN}
+\min_{\bar{\vect{s}}}\|\bar{\vect{s}}\|_{1}
+\textnormal{ subject to }\| \bm{y}-\mat{\Phi H}\bar{\vect{s}}\|_{2}\leq\epsilon,
+\end{equation}
+where $\mat{H}$ is a circulant matrix which contains time-shifted replicas of the pulse, $\vect{m}_p = \mat{H} \vect{s}$, $\vect{s}$ is the $K$-sparse spike train and $\epsilon$ is a higher bound of the $\ell_2$-norm of the noise.
+\subsection{Multi-channel ultrasound pulse-stream model}
+\label{subsec_US_multiplechannels}
+The model described in Section~\ref{subsec_US_pulsestream} is suited to single channel reconstructions. However, such a model does not account for inter-channel dependencies, which are self-evident in state-of-the-art US imaging configurations (see Figure~\ref{fig_pulse_echo}). By taking into account such dependencies, one may be able to decrease the number of measurements required to reconstruct US signals.
+The following theorem precises the way the dependencies between two channels may be expressed.
+\begin{theorem}[Two-channel scenario]
+\label{th_2sens_subspace}
+The support $\sigma \left(\vect{s}_i\right)$ of the spike train $\vect{s}_i$ corresponding to the sensor located at a distance $\Delta_{ij}$ from the sensor $j$, whose spike train is $\vect{s}_j$, has the following property:
+	\begin{equation*}
+		\sigma \left(\vect{s}_i\right) \subset S_{ij},
+	\end{equation*}
+	where $S_{ij} := \bigcup \limits_{k=1}^K \ser{\Omega_k}{ij}$ is a union of $2 D_{ij}$-dimensional subspaces $\ser{\Omega_k}{ij}$ defined by: 
+	\begin{equation*}
+		\ser{\Omega_k}{ij} := \left \lbrace \left \lbrace k - D_{ij},\dots, k+ D_{ij} \right\rbrace, \; k \in \sigma \left(\vect{s}_{j}\right) \right\rbrace,
+	\end{equation*}
+	where $D_{ij}~=~\lceil f_s \Delta_{ij}/ c  \rceil$. 
+\end{theorem}
+In the above theorem, $\lceil.\rceil$ designates the round value.
+\begin{proof}
+	Let us suppose that $x_j \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_j}{k}\right)$ and $x_i \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_i}{k}\right)$. From Equation~\eqref{eq_usdelay}, one may deduce the following:
+	\begin{align*}
+	\ser{t_j}{k} &= t_{Tx}\left(\vect{r}^k\right) + t_{Rx}\left(\vect{r}^k, \ser{\vect{r}_{ts}}{j}\right) \\
+	&= t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \ser{\vect{r}_{ts}}{j} \|_2}{c}\\
+	&\leq  t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \ser{\vect{r}_{ts}}{i} \|_2}{c} + \frac{\Delta_{ij}}{c}\\
+	&\leq \ser{t_i}{k} + \frac{\Delta_{ij}}{c}.
+	\end{align*}
+	Reversely, one can deduce that $\ser{t_j}{k} \geq \ser{t_i}{k} - \frac{\Delta_{ij}}{c}$, which leads to $\ser{t_i}{k} \in \left[\ser{t_j}{k} -\frac{\Delta_{ij}}{c}, \ser{t_j}{k} +\frac{\Delta_{ij}}{c}\right]$. Thus, by multiplying by $f_s$, one may deduce that:
+	\begin{equation}
+	\label{eq_1_support_x_xj}
+		\forall l \in \sigma\left(\vect{s}_i\right), \exists p \in \sigma \left(\vect{s}_j\right) \; | \; l \in \left\lbrace p-D_{ij},\dots,p+D_{ij}\right\rbrace,
+	\end{equation}
+	where $D_{ij}~=~\lceil f_s \Delta_{ij}/ c  \rceil$. Generalizing Equation~\eqref{eq_1_support_x_xj} to the support of $\sigma\left(\vect{s}_i\right)$, one may retrieve the result of Theorem~\ref{th_2sens_subspace}.
+\end{proof}
+Theorem~\ref{th_2sens_subspace} states that the support of $\vect{s}_i$ is a union of $K$ \num{2}$D_{ij}$-dimensional subspaces located around the support $\sigma \left(\vect{s}_j\right)$ of the signal received at sensor $j$. The dimension of each subspace depends on the distance between the sensors. 
+
+We can go further than the two-channel scenario by considering that we have prior knowledge on multiple channels. In this case, the following theorem holds.
+\begin{theorem}[Multi-channel scenario]
+	\label{th_multisens_subspace}
+	 The support $\sigma \left(\vect{s}_i\right)$ of the spike train $\vect{s}_i$ corresponding to the sensor located at distances $\left(\Delta_{ij}\right)_{j=1}^n$ from a set of $n$ sensors, whose spike trains are $\left(\vect{s}_j\right)_{j=1}^n$, has the following property:
+	\begin{equation*}
+	\sigma \left(\vect{s}_i\right) \subset S,
+	\end{equation*}
+	where $S := \bigcap \limits_{j=1}^{n} S_{ij} $ is the intersection of the spaces $S_{ij}$ defined in Theorem~\ref{th_2sens_subspace}.
+\end{theorem}
+\begin{proof}
+	This is a simple generalization of Theorem~\ref{th_2sens_subspace}. Let us denote as $\left(\vect{s}_j\right)_{j=1}^n$ the spike trains associated with the $n$ considered sensors.
+	Then, Theorem~\ref{th_2sens_subspace} states that:
+	\begin{align*}
+	 \forall j \in \left\lbrace 1,\dots,n \right \rbrace &, \; \sigma \left(\vect{s}_i\right) \in S_{ij} \\
+	 \Leftrightarrow & \sigma \left(\vect{s}_i\right) \in \bigcap \limits_{j=1}^{n} S_{ij}. 
+	\end{align*} 
+\end{proof}
+
+In this case, the support $\sigma\left(\vect{s}_i\right)$ is included into a smaller subspace, taking into account the dependencies between the considered sensor and the $n$ other ones. We use the result of Theorem~\ref{th_multisens_subspace} to define the multi-channel US pulse-stream model as:
+\begin{equation}
+\label{eq_pulse_USstream_model}
+\mathcal{U}^z_{K,F}:=\left\lbrace \vect{z} \in \mathbb{R}^N: \vect{z} = \vect{s} \ast \vect{h} \; | \;\vect{s} \in \mathcal{M}_K, \; \sigma\left(\vect{s}\right) \subset S \right\rbrace,
+\end{equation} 
+where $\vect{h}$ is supposed to be known. 
+
+\subsection{Sampling theorem of multi-channel ultrasound pulse-stream}
+\label{subsec_sampling_pulse_stream}
+The multi-channel US pulse-stream model has an additional structure compared to the general pulse-stream model which can be exploited in order to reduce the sampling rate requirements for signals belonging to $\mathcal{U}^z_{K,F}$. The theorem hereafter makes this precise and sets the sampling requirements for multi-channel US pulse-stream signals.
+\begin{theorem}
+	\label{th_stream_pulse_us}
+	Suppose that $\mathcal{U}^z_{K,F}$ is the multi-channel ultrasound pulse-stream model defined in Equation~\eqref{eq_pulse_USstream_model}. Let $t > 0$ and $\delta > 0$. Choose a $M \times N$ i.i.d Gaussian matrix $\mat{\Phi}$ with 
+	\begin{equation*}
+	M \geq \mathcal{O} \left(\left(K + F\right) \ln \left(\frac{1}{\delta} \right) + K \left( 1 + \log \left(\frac{|S|}{K}\right)\right) + t\right).
+	\end{equation*} 
+	Then $\mat{\Phi}$ satisfies the following property with probability $1-e^{-t}$: $\forall \vect{z}_1, \vect{z}_2 \in \mathcal{U}^z_{K,F}$, 
+	\begin{equation*}
+	\left(1- \delta\right) \| \vect{z}_1 - \vect{z}_2\|^2 \leq \| \mat{\Phi} \vect{z}_1 - \mat{\Phi} \vect{z}_2\|^2\leq \left(1+ \delta\right) \| \vect{z}_1 - \vect{z}_2\|^2.
+	\end{equation*}
+\end{theorem}
+In the theorem above $|S|$ denotes the cardinality of the set $S$.
+\begin{proof}
+	The proof is based on Theorem~\num{1} of~\cite{Hedge_TSP_2011}. Suppose that $\vect{z} \in \mathcal{U}^z_{K,F}$, then, $\vect{z} \in \mathcal{M}^z_{K,F}$. From~\cite{Hedge_TSP_2011}, one may set the bound $M$ as:
+	\begin{equation}
+		\label{eq_sampling_Hedge}
+		M \geq \mathcal{O} \left(\left(K + F\right) \ln \left(\frac{1}{\delta}\right) + \log \left(L_K L_F\right) + t\right)
+	\end{equation} 
+	where $t > 0$. When $\vect{h}$ is known, $L_F = 1$. Moreover, if we consider that $\sigma \left(\vect{s}\right) \subset S$, then the following inequality holds:
+	\begin{align*}
+		&L_K \leq {{|S|}\choose{K}} \approx \left(\frac{e|S|}{K}\right)^K \\
+		\Leftrightarrow & \log \left(L_K\right) \leq K \left(1 + \log\left(\frac{|S|}{K}\right)\right).
+	\end{align*}
+	Introducing the above results in Equation~\eqref{eq_sampling_Hedge} leads to the results of Theorem~\ref{th_stream_pulse_us}.
+\end{proof}
+The main benefit of Theorem~\ref{th_stream_pulse_us} is that, as described by Hedge and Baraniuk~\cite{Hedge_TSP_2011}, the number of samples only depends on the size of the support rather than the size of the signal. The number of measurements also scales with $K+F$, which is consistent with the pulse-stream model.
+
+\subsection{Recovery of multi-channel ultrasound pulse-stream}
+\label{subsec_sampling_pulse_stream}
+The signal $\vect{m} = \vect{s} \ast \vect{h}$, $\vect{m} \in \mathcal{U}^z_{K,F}$, can be recovered by solving the following problem:
+\begin{equation}
+\label{eq_l1_BPDN_support}
+\min_{\bar{\vect{s}}_{|S}}\|\bar{\vect{s}}_{|S}\|_{1}
+\textnormal{ subject to }\| \bm{y}-\mat{\Phi H W}_S\bar{\vect{s}}_{|S}\|_{2}\leq\epsilon,
+\end{equation}
+where $\bar{\vect{s}}_{|S}$ represents the entries of $\vect{s}$ corresponding to the set of indices $S$ and $\mat{W}_S \in \mathbb{R}^{N \times |S|}$ is a selection matrix. 
+Problem~\eqref{eq_l1_BPDN_support} is solved using state-of-the-art convex optimization algorithms.
+\section{Experiments}
+\label{sec_exp}
+We now present the results of experiments that validate the proposed approach and show its benefits.
+In all the experiments, Problem~\eqref{eq_l1_BPDN_support} is solved using the alternating direction methods of multipliers~(ADMM)~\cite{Boyd2010}.
+\subsection{Synthetic $1D$-pulse streams}
+\label{subsec_synth_pulse}
+%%%%%%%%%%%% FIGURE %%%%%%%%%%%
+\newlength{\CohSubFigWidth} \setlength{\CohSubFigWidth}{0.23\textwidth}
+\newlength{\CohSubFigHeight}
+\settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{figures/NMSE_noiseless.pdf}}
+\begin{figure}[htb]
+	% Maximum length
+	\hfill%
+	\subcaptionbox{\label{fig_synth_US_nmse}}{\includegraphics[height=\CohSubFigHeight]{Figures/NMSE_noiseless.pdf}}\hfill%
+	\subcaptionbox{\label{fig_synth_US_nmse_2lambda}}{\includegraphics[height=\CohSubFigHeight]{Figures/NMSE_noiseless_2lambda.pdf}}\hfill%
+	\caption{Normalized MSE for (a) $\Delta = $ \SI{0.31}{\milli\metre}~(phased-array) and (b) $\Delta = $ \SI{0.62}{\milli\metre}~(linear-array) vs. the compression ratio~($M/N$) for the proposed method for \num{1}-, \num{2}-, \num{5}- and \num{10}-channel scenarios. Signals parameters: $N=2000$, $F=31$, $K=20$.}
+	\label{fig_synth_US}
+\end{figure}
+%%%%%%%%%%%% FIGURE %%%%%%%%%%%
+\settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{figures/res_1channel.pdf}}
+\begin{figure*}[htb]
+	% Maximum length
+	\hfill%
+	\subcaptionbox{\label{fig_channel_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/channel_ref.pdf}}\hfill%
+	\subcaptionbox{\label{fig_channel_noisy}}{\includegraphics[height=\CohSubFigHeight]{Figures/channel_noisy.pdf}}\hfill%
+	\subcaptionbox{\label{fig_res_1chan}}{\includegraphics[height=\CohSubFigHeight]{Figures/res_1channel.pdf}}\hfill%
+	\subcaptionbox{\label{fig_res_5chan}}{\includegraphics[height=\CohSubFigHeight]{Figures/res_5channels.pdf}}\hfill%
+	\caption{(a) Original signal (b) Noisy signal~(SNR =\SI{40}{\decibel}) (c) Recovered estimate from $M=160$ measurements in a \num{1}-channel scenario (d) Recovered estimate from $M=160$ measurements in a \num{5}-channel scenario.}
+	\label{fig_synth_noisy}
+\end{figure*}
+
+First, $K=$~\num{20} point-scatterers with random amplitudes and positions $\vect{r}^k = \left[x^k, z^k\right]^T$ for $k$ between $1$ and $K$ are generated. \num{10} sensors are considered, with an inter-sensor spacing of $\Delta$. Spike trains of length $N = 2000$ are deduced from $\vect{r}^k$ and $\Delta$ using Equation~\eqref{eq_usdelay}, where $t_{Tx}\left(\vect{r}^k\right)~=~z^k /c$.
+The synthetic $1D$-pulse streams are generated by convolving the \num{10} spike trains with a pulse $h\left(t\right)$ where the excitation signal is set to $e\left(t\right)~=~\sin \left(2 \pi f_0 t\right)$, with $t \leq 1/f_0$, and $h_{ae} \left(t\right) = h_{ea} \left(t\right) = w\left(t\right) \sin \left(2 \pi f_0 t\right)$, where $w\left(t\right)$ is a Hanning window and $t\leq2/f_0$. The central frequency $f_0$ is chosen to be \SI{5}{\mega\hertz} and the sampling frequency $f_s$ is set to \SI{30}{\mega\hertz}, leading to $F=31$.
+
+Figure~\ref{fig_synth_US} displays the averaged results of a Monte-Carlo simulation over \num{1000} trials of the ADMM algorithm. Each trial was conducted by randomly generating the amplitudes and positions of the $K$ point-scatterers, the Gaussian \textit{i.i.d} matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$ and by reconstructing the raw data $\vect{m}$ of one sensor from different values of $M/N$. 1-channel as well as multi-channel scenarios are considered. For the multi-channel scenarios, prior knowledge on the support of the spike trains of $1, 4$ and $9$ neighbouring sensors of the sensor of interest are considered. Figure~\ref{fig_synth_US_nmse} and~\ref{fig_synth_US_nmse_2lambda} show the normalized mean squared error~(NMSE), calculated as $\| \vect{m} - \vect{m}^\star \|_2 / \| \vect{m}\|_2$, where $\vect{m}$ is the reference and $\vect{m}^\star$ the estimate, for two different inter-sensor spacings, namely \SI{0.31}{\milli\metre}~(one wavelength) and \SI{0.62}{\milli\metre}~(two wavelengths). Concerning the optimization algorithm, the maximum number of iterations is set to \num{1000} and $\epsilon = 0$. 
+
+From Figure~\ref{fig_synth_US}, it is clear that the multi-channel configurations outperform the 1-channel configuration. Regarding Figures~\ref{fig_synth_US_nmse}~and~\ref{fig_synth_US_nmse_2lambda}, it can be noticed that, for a higher inter-sensor spacing, the \num{5}-channel and \num{10}-channel scenarios outperform the \num{2}-channel scenario. Indeed, when the spacing is higher, the dimension of the subspaces $S_i$ is increased and the dimensionality reduction induced by Theorem~\ref{th_multisens_subspace} has a higher impact.
+
+Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust to small amount of noise~(SNR = \SI{40}{\decibel}). For this experiment, the settings are the same as the ones used for the noiseless experiment. A small amount of Gaussian noise is added to the element raw-data of each sensor, leading to the signal displayed on Figure~\ref{fig_channel_noisy}. Figures~\ref{fig_res_1chan}~and ~\ref{fig_res_5chan} show the recovered signals for the \num{1}-channel and \num{5}-channels scenarios, respectively, for a number of measurements $M=160$. It can be seen that the signal recovered from the \num{5}-channel scenario is closer to the original signal than the one recovered from the \num{1}-channel scenario.
+
+\subsection{\textit{In vivo} ultrasound images}
+\label{subsec_invivo_images}
+Element raw-data of an \textit{in vivo} carotid, for 1 PW insonification with normal incidence, have been acquired with an Ultrasonix scanner~(Ultrasonix Analogic Ultrasound, Richmond, BC, Canada), equipped with a linear probe composed of \num{128} transducer-elements, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth, with an inter-sensor spacing of \SI{0.46}{\milli\metre}. The sampling frequency has been set to \SI{40}{\mega\hertz}. 
+
+After acquisition, the element raw-data are imported on MATLAB~(The Mathworks, Natic, MA) and compressed using a Gaussian \textit{i.i.d} matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.06$, with $N=1519$. The pulse is supposed to be known and equal to the one described in Section~\ref{subsec_synth_pulse}. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). Concerning the optimization algorithm, the maximum number of iterations is set to \num{2000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
+
+Once the raw data are reconstructed from compressed measurements, standard US beamforming is applied to generate the radio-frequency~(RF) image. The envelope is extracted through Hilbert transform, normalized and log-compressed~(dynamic range of \SI{40}{\decibel}) to obtain the B-mode image. 
+
+Figure~\ref{fig_carotid}, which displays the recovered B-mode images, shows an increase of the image quality in the multi-channel scenario. This increase is quantified by a difference of \SI{1}{\decibel} in the peak-signal-to-noise ratio~(PSNR) between the 1- and the multi-channel reconstructions. 
+%%%%%%%%%%%% FIGURE %%%%%%%%%%%
+\setlength{\CohSubFigWidth}{0.24\textwidth}
+\settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{figures/carotid_ref.pdf}}
+\begin{figure}[htb]
+	% Maximum length
+	\centering
+	\hfill%
+	\subcaptionbox{\label{fig_carotid_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_ref.pdf}}\hfill%
+	\subcaptionbox{\label{fig_carotid_1cha}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_rec_1channel.pdf}}\hfill%
+	\subcaptionbox{\label{fig_carotid_multcha}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_rec_multichannels.pdf}}\hfill%
+	\caption{(a) Original B-mode image of the carotid; Recovered B-mode image from $M=91$ measurements (b) in a \num{1}-channel scenario~(PSNR~=~\SI{28.4}{\decibel}); (c) in a \num{2}-channels scenario~(PSNR~=~\SI{29.4}{\decibel}).}
+	\label{fig_carotid}
+\end{figure}
+\section{Conclusion}
+\label{sec_concl}
+In this paper, we have presented an extension of the pulse-stream model to ultrasound imaging. The proposed model, coined as \textit{multi-channel US pulse-stream model}, accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model. This structure enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support. We have illustrated its benefits on synthetic $1D$-pulses as well as on \textit{in vivo} ultrasound images.
+
+
+
+
+
+% if have a single appendix:
+%\appendix[Proof of the Zonklar Equations]
+% or
+%\appendix  % for no appendix heading
+% do not use \section anymore after \appendix, only \section*
+% is possibly needed
+
+% use appendices with more than one appendix
+% then use \section to start each appendix
+% you must declare a \section before using any
+% \subsection or using \label (\appendices by itself
+% starts a section numbered zero.)
+%
+
+
+% Can use something like this to put references on a page
+% by themselves when using endfloat and the captionsoff option.
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,SPL2017}
+
+% biography section
+% 
+% If you have an EPS/PDF photo (graphicx package needed) extra braces are
+% needed around the contents of the optional argument to biography to prevent
+% the LaTeX parser from getting confused when it sees the complicated
+% \includegraphics command within an optional argument. (You could create
+% your own custom macro containing the \includegraphics command to make things
+% simpler here.)
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+% or if you just want to reserve a space for a photo:
+
+
+
+% that's all folks
+\end{document}
+
+
