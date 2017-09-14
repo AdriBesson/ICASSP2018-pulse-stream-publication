@@ -1,7 +1,5 @@
-\documentclass[journal]{IEEEtran}
-% Some very useful LaTeX packages include:
-% (uncomment the ones you want to load)
-
+\documentclass{article}
+\usepackage{spconf,amsmath}
 
 % *** MISC UTILITY PACKAGES ***
 \usepackage{color}				
@@ -9,10 +7,7 @@
 
 % *** GRAPHICS RELATED PACKAGES ***
 %
-\ifCLASSINFOpdf
 \usepackage[pdftex]{graphicx}
-\else
-\fi
 
 \usepackage{subcaption}
 
@@ -50,10 +45,19 @@
 % *** TIKZ SETTINGS***
 \input{tikz_settings}
 
-\hyphenation{op-tical net-works semi-conduc-tor}
+\name{Adrien~Besson$^{\star}$,
+	Dimitris~Perdios$^{\star}$,
+	Marcel~Arditi$^{\star}$,
+	Yves~Wiaux$^{\ast}$,
+	Jean-Philippe Thiran$^{\star, \dagger}$\thanks{This work was supported by the UltrasoundToGo RTD project (no. 20NA21\_145911), funded by Nano-Tera.ch.}}% <-this % stops a space
 
+\address{$^{\star}$Signal Processing Laboratory (LTS5),
+	Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne, Switzerland\\
+	$^{\ast}$Institute of Sensors, Signals and Systems, Heriot-Watt University, UK\\
+	$^{\dagger}$Department of Radiology, University Hospital Center and University of Lausanne, Switzerland}%
 
 \begin{document}
+\ninept
 %
 % paper title
 % Titles are generally capitalized except for words such as a, an, and, as,
@@ -61,7 +65,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Pulse-stream models in ultrasound imaging}
+\title{Pulse-stream models in array imaging}
 %
 %
 % author names and IEEE memberships
@@ -70,47 +74,6 @@
 % two lines.
 % use \thanks{} to gain access to the first footnote area
 % a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
-% was not built to handle multiple paragraphs
-%
-
-\author{Adrien~Besson,~\IEEEmembership{Student member}
-        Rafael~E.~Carrillo,~\IEEEmembership{Member}
-        Dimitris~Perdios,~\IEEEmembership{Student member}
-        Marcel~Arditi,~\IEEEmembership{Member},
-        Yves~Wiaux,
-        Jean-Philippe Thiran,~\IEEEmembership{Senior member}% <-this % stops a space
-\thanks{A.~Besson, D.~Perdios, M.~Arditi and J.-Ph.~Thiran are with the Signal Processing Laboratory 5~(LTS5), Ecole Polytechnique F\'{e}d\'{e}rale de Lausanne, CH-1015, Lausanne, Switzerland.}% 
-\thanks{R. Carrillo is with the Centre Suisse d'\'{e}lectronique et microtechnique~(CSEM), 2002 Neuch\^{a}tel, Switzerland.}%
-\thanks{Y. Wiaux is with the Institute of Sensors, Signals and Systems, Heriot-Watt University, EH14 4AS Edinburgh, United-Kingdom.}% <-this % stops a space
-\thanks{J.-Ph. Thiran is also with the Department of Radiology, University Hospital Center~(CHUV) and University of Lausanne~(UNIL), CH-1011, Lausanne, Switzerland.}}% <-this % stops a space
-
-% The paper headers
-\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
-{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
-% The only time the second header will appear is for the odd numbered pages
-% after the title page when using the twoside option.
-% 
-% *** Note that you probably will NOT want to include the author's ***
-% *** name in the headers of peer review papers.                   ***
-% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
-% you desire.
-
-
-
-
-% If you want to put a publisher's ID mark on the page you can do it like
-% this:
-%\IEEEpubid{0000--0000/00\$00.00~\copyright~2015 IEEE}
-% Remember, if you use this you must call \IEEEpubidadjcol in the second
-% column for its text to clear the IEEEpubid mark.
-
-
-
-% use for special paper notices
-%\IEEEspecialpapernotice{(Invited Paper)}
-
-
-
 
 % make the title area
 \maketitle
@@ -122,9 +85,9 @@
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
-\begin{IEEEkeywords}
-Compressed sensing, sparsity, ultrasound imaging
-\end{IEEEkeywords}
+\begin{keywords}
+Compressed sensing, sparsity, array imaging
+\end{keywords}
 
 
 
@@ -139,8 +102,7 @@ Compressed sensing, sparsity, ultrasound imaging
 %
 % For peerreview papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
-\IEEEpeerreviewmaketitle
-
+\maketitle
 \section{Introduction}
 \label{sec_intro}
 \begin{figure}[htb]
@@ -387,9 +349,6 @@ In this paper, we have presented an extension of the pulse-stream model to ultra
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
-\ifCLASSOPTIONcaptionsoff
-  \newpage
-\fi
 
 
 
@@ -408,7 +367,7 @@ In this paper, we have presented an extension of the pulse-stream model to ultra
 % http://mirror.ctan.org/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEbib}
 \bibliography{IEEEabrv,SPL2017}
 
 % biography section
