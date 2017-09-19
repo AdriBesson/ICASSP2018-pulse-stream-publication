@@ -340,7 +340,7 @@ In all the experiments, Problem~\eqref{eq_l1_BPDN_support} is solved using the a
 	\subcaptionbox{\label{fig_channel_noisy}}{\includegraphics[height=\CohSubFigHeight]{Figures/channel_noisy.pdf}}\hfill%
 	\subcaptionbox{\label{fig_res_1chan}}{\includegraphics[height=\CohSubFigHeight]{Figures/res_1channel.pdf}}\hfill%
 	\subcaptionbox{\label{fig_res_5chan}}{\includegraphics[height=\CohSubFigHeight]{Figures/res_5channels.pdf}}\hfill%
-	\caption{(a) Original signal (b) Noisy signal~(SNR =\SI{40}{\decibel}) (c) Recovered estimate from $M=160$ measurements in a \num{1}-channel scenario (d) Recovered estimate from $M=160$ measurements in a \num{5}-channel scenario.}
+	\caption{(a) Original signal (b) Noisy signal~(SNR=\SI{40}{\decibel}) (c) Recovered estimate from $M=160$ measurements in a \num{1}-channel scenario (d) Recovered estimate from $M=160$ measurements in a \num{5}-channel scenario.}
 	\label{fig_synth_noisy}
 \end{figure*}
 
@@ -358,7 +358,7 @@ From Figure~\ref{fig_synth_US}, it is clear that the multi-channel configuration
 Regarding Figures~\ref{fig_synth_US_nmse}~and~\ref{fig_synth_US_nmse_2lambda}, it can be noticed that, for a higher inter-sensor spacing, the \num{5}-channel and \num{10}-channel scenarios outperform the \num{2}-channel scenario. 
 Indeed, when the spacing is higher, the dimension of the subspaces $S_i$ is increased and the dimensionality reduction induced by Theorem~\ref{th_multisens_subspace} has a higher impact.
 
-Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust to small amount of noise~(SNR = \SI{35}{\decibel}). 
+Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust to small amount of noise~(SNR = \SI{40}{\decibel}). 
 For this experiment, the settings are the same as the ones used for the noiseless experiment. 
 A small amount of Gaussian noise is added to the element raw-data of each sensor, leading to the signal displayed on Figure~\ref{fig_channel_noisy}. Figures~\ref{fig_res_1chan}~and ~\ref{fig_res_5chan} show the recovered signals for the \num{1}-channel and \num{5}-channels scenarios, respectively, for a number of measurements $M=160$. 
 It can be seen that the signal recovered from the \num{5}-channel scenario is closer to the original signal than the one recovered from the \num{1}-channel scenario.
