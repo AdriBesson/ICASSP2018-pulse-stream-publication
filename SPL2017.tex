@@ -309,7 +309,7 @@ where $\left(\mat{\Phi H}\right)_{|S}^\dagger$ denotes the Moore pseudo-inverse 
 In a more general case, $\vect{\alpha}^\star$ can be recovered by solving the following convex optimization problem~\cite{candes11}:
 \begin{equation}
 \label{eq_l1_BPDN_support}
-\min_{\vect{\alpha}}\|\vect{\alpha}\|_{1}
+\min_{\vect{\alpha} \in \mathbb{R}^{|S|}}\|\vect{\alpha}\|_{1}
 \textnormal{ subject to }\| \bm{y}-\left(\mat{\Phi H}\right)_{|S}\vect{\alpha}\|_{2}\leq\epsilon.
 \end{equation}
 Problem~\eqref{eq_l1_BPDN_support} is solved using state-of-the-art convex optimization algorithms.
@@ -317,7 +317,7 @@ Problem~\eqref{eq_l1_BPDN_support} is solved using state-of-the-art convex optim
 \label{sec_exp}
 We now present the results of experiments that validate the proposed approach and show its benefits.
 In all the experiments, Problem~\eqref{eq_l1_BPDN_support} is solved using the alternating direction methods of multipliers~(ADMM)~\cite{Boyd2010}.
-\subsection{Synthetic $1D$-pulse streams}
+\subsection{Synthetic \num{1}D-pulse streams}
 \label{subsec_synth_pulse}
 %%%%%%%%%%%% FIGURE %%%%%%%%%%%
 \newlength{\CohSubFigWidth} \setlength{\CohSubFigWidth}{0.23\textwidth}
@@ -344,7 +344,7 @@ In all the experiments, Problem~\eqref{eq_l1_BPDN_support} is solved using the a
 	\label{fig_synth_noisy}
 \end{figure*}
 
-First, $K=$~\num{20} point-scatterers with random amplitudes and positions are generated. 
+$K=$~\num{20} point-scatterers with random amplitudes and positions are generated. 
 \num{10} sensors are considered, with an inter-sensor spacing of $\Delta$. Pulse-streams of length $N = 2000$ are simulated mimicking ultrasound plane-wave imaging with normal incidence~\cite{montaldo_uffc_2014}.
 The considered pulse $h\left(t\right)$ is a convolution between a $2$-cycle square excitation signal and a Gaussian pulse~(\num{2.5} cycles, center frequency \SI{5.208}{\mega\hertz}, bandwidth \SI{67}{\percent}) which mimics the impulse response of ultrasound transducer elements. The sampling frequency $f_s$ is set to \SI{20.8}{\mega\hertz} which corresponds to four times the center frequency.
 
