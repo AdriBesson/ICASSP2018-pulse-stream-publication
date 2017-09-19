@@ -159,7 +159,7 @@ where $a_k$ and $t_i^k$ are the amplitude and delay associated with the $k$-th t
 The delay associated with the $k$-th target depends on its relative position with respect to the $i$-th sensor and can be expressed as follows:
 \begin{equation}
 \label{eq_usdelay}
-t_i^k = t_{Tx}\left(\vect{r}^k\right) + \frac{||\vect{r}^k -  \vect{p}^i ||_2}{c},
+t_i^k = t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k -  \vect{p}^i \|_2}{c},
 \end{equation}
 where $c$ denotes the wave velocity in the medium, supposed to be constant, and $t_{Tx}\left(\vect{r}^k\right)$ is the transmit delay which depends on the transmit settings.
 
@@ -291,7 +291,7 @@ Let us consider that the signal $\vect{y} = \mat{\Phi} \vect{m}$ is measured, wh
 As stated in Section~\ref{subsec_sampling_pulse_stream}, the recovery problem in $\mathbb{R}^N$ can be recast as the following recovery problem in $\mathbb{R}^{|S|}$:
 \begin{equation}
 \label{eq_problem_support}
-\textnormal{Find } \vect{\alpha} \in \mathbb{R}^{|S|} \textnormal{ such that } || \vect{y} - \left(\mat{\Phi H}\right)_{|S}\vect{\alpha}||_2 \leq \epsilon, \; || \vect{\alpha} ||_0 = K, 
+\textnormal{Find } \vect{\alpha} \in \mathbb{R}^{|S|} \textnormal{ such that } \| \vect{y} - \left(\mat{\Phi H}\right)_{|S}\vect{\alpha}\|_2 \leq \epsilon, \; \| \vect{\alpha} \|_0 = K, 
 \end{equation}
 where $\epsilon \in \mathbb{R}_{+}$ accounts for the noise level and $\left(\mat{\Phi H}\right)_{|S} \in \mathbb{R}^{M \times |S|}$ corresponds to a submatrix of $\mat{\Phi H}$ formed by the columns indexed by the support $S$. 
 Depending on the ratio between the number of measurements $M$, the size of the support $S$ and the noise level, two different recovery procedures may be considered.
@@ -387,7 +387,7 @@ Figure~\ref{fig_carotid}, which displays the recovered B-mode images, shows an i
 \end{figure}
 \section{Conclusion}
 \label{sec_concl}
-In this paper, we have presented an extension of the pulse-stream model to ultrasound imaging. The proposed model, coined as \textit{multi-channel US pulse-stream model}, accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model. This structure enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support. We have illustrated its benefits on synthetic $1D$-pulses as well as on \textit{in vivo} ultrasound images.
+In this paper, we have presented an extension of the pulse-stream model to time-of-flight imaging with an array of sensors. The proposed model, coined as \textit{multi-channel pulse-stream model}, accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model which enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and \textit{in vivo} signals.
 
 
 
