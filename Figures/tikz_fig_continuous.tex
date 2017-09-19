@@ -22,7 +22,7 @@
 	% http://tex.stackexchange.com/questions/3594/tikz-node-labels-more-below-than-below#3596
 %	\node[fill, shape=circle, minimum size=0.1cm, inner sep=0cm, outer sep=0cm, color=scatterer-color, label=below:\textcolor{scatterer-color}{$\left(\vect{r}, \gamma\left(\vect{r}\right)\right)$}] (scatterer_point) at (\scatPointX, -\scatPointZ) {}; % NOT exactly 0.1cm radius..., not exactly the correct "below" distance
 	\node[fill, shape=circle, minimum size=0.1cm, inner sep=0cm, outer sep=0cm, color=scatterer-color] (scatterer_point) at (\scatPointX, -\scatPointZ) {};
-	\fill[color=scatterer-color] (scatterer_point) circle[radius=0.1] node[below]{$\left(\vect{r}^k, \gamma\left(\vect{r}^k\right)\right)$};
+	\fill[color=scatterer-color] (scatterer_point) circle[radius=0.1] node[below]{$\vect{r}^k$};
 	
 	% Measurements
 %	\pgfmathsetmacro{\pt}{7}
@@ -59,7 +59,7 @@
 		% Measurement label
 %		\draw[] (\tdPosX, \transducerHeight) -- node[midway, sloped, below]{$m\left(\vect{r}_{ts}^i, t\right)$} (\tdPosX, {\tStart+\transducerHeight});
 		\ifdefstrequal{\pt}{\transducerLabeled}{%
-			\fill[color=measurement-color] (\tdPosX, {0.5*\tStart+0.5*\tEnd+\transducerHeight}) circle[radius=0] node[below left]{\rotatebox{90}{$m\left(\vect{r}_{ts}^i, t\right)$}};
+			\fill[color=measurement-color] (\tdPosX, {0.5*\tStart+0.5*\tEnd+\transducerHeight}) circle[radius=0] node[below left]{\rotatebox{90}{$m\left(\vect{p}^i, t\right)$}};
 			% COULD USE \path without option for an invisible path
 		}{}
 		
@@ -68,10 +68,10 @@
 	
 	% Labels for transducer and measurement
 	\pgfmathsetmacro{\tdPosX}{\transducerInitXPos+(\transducerLabeled-1)*\transducerXOffset}
-	\node[above] at (td\transducerLabeled) {$\vect{r}_{ts}^i$};
+	\node[above] at (td\transducerLabeled) {$\vect{p}^i$};
 	
 	\pgfmathsetmacro{\tdPosX}{\transducerInitXPos+(\transducerLabeledBis-1)*\transducerXOffset}
-	\node[above] at (td\transducerLabeledBis) {$\vect{r}_{ts}^j$};
+	\node[above] at (td\transducerLabeledBis) {$\vect{p}^j$};
 	
 %	\node[above] at (\tdPosX, \measurementLength + \transducerHeight) {\rotatebox{90}{\textcolor{measurement-color}{$m\left(\vect{r}_{ts}^i, t\right)$}}};
 	
@@ -157,7 +157,7 @@
 %
 %	
 	% Receive time for flight
-	\draw[->, wavefront-color] (scatterer_point) -- node[midway, sloped, below] {$\frac{\|\vect{r}^k-\vect{r}_{ts}^i\|_2}{c}$} (td\transducerLabeled.south);
+	\draw[->, wavefront-color] (scatterer_point) -- node[midway, sloped, below] {$\frac{\|\vect{r}^k-\vect{p}^i\|_2}{c}$} (td\transducerLabeled.south);
 %	
 %	% 1-D conic (ellipse)
 %	\coordinate (dw_ellipse_focus1) at (dw_virtual_point);
