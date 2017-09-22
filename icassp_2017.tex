@@ -4,7 +4,7 @@
 % *** MISC UTILITY PACKAGES ***
 \usepackage{color}				
 \usepackage{url}
-
+\usepackage{hyperref}
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \usepackage[pdftex]{graphicx}
@@ -80,7 +80,7 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-	This paper considers the problem of reconstructing raw-data from random projections in the context of time-of-flight imaging with an array of sensors. It presents a new signal model, coined as \textit{multi-channel pulse-stream model}, which exploits pulse-stream models and accounts for additional structure induced by inter-sensor dependencies. We propose a sampling theorem and a reconstruction algorithm, based on $\ell_1$-minimization, for signals belonging to such a model. We show the benefits of the proposed approach through numerical simulations on \num{1}D-signals and on \textit{in vivo} ultrasound images. 
+	This paper considers the problem of reconstructing raw signals from random projections in the context of time-of-flight imaging with an array of sensors. It presents a new signal model, coined as \textit{multi-channel pulse-stream model}, which exploits pulse-stream models and accounts for additional structure induced by inter-sensor dependencies. We propose a sampling theorem and a reconstruction algorithm, based on $\ell_1$-minimization, for signals belonging to such a model. We show the benefits of the proposed approach by means of numerical simulations and on a real non-destructive-evaluation application. 
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -107,7 +107,7 @@ Compressed sensing, sparsity, array imaging
 \begin{figure}[htb]
 	\centering
 	\input{Figures/tikz_fig_continuous}
-	\caption{Standard 2D time-of-flight imaging configuration.}
+	\caption{Considered time-of-flight imaging configuration.}
 	\label{fig_pulse_echo}
 \end{figure}
 %Pulse-echo ultrasound~(US) imaging is based on the transmission of short acoustic pulses through the human body. When such pulses encounter medium inhomogeneities, part of their energy is reflected back to the array of transducer-elements. The received signals, denoted as element-raw data, consist of backscattered echoes from the medium. Ultrafast US imaging is one specific modality of pulse-echo imaging which exploits the transmission of plane waves~(PW) or diverging waves in order to insonify the whole medium at once~\cite{Tanter_UFFC_2014}. Formally, let us assume that the transducer array is made of $N_{el}$ elements, positioned at $\left(\ser{\vect{r}_{ts}}{p}\right)_{p=1}^{N_{el}}$, as described on Figure~\ref{fig_pulse_echo}. Let us also consider that the medium is made of $K$ point-scatterers positioned at $\left(\vect{r}^k\right)_{k=1}^K$. The signal $m_{p} \left(t\right)$ received at the $p$-th element can be expressed as~\cite{Chernyakova2014, Tur_TSP_2012}:
@@ -145,9 +145,9 @@ where $\mathcal{M}_K \subset \mathbb{R}^N$ and $\mathcal{M}_F \subset \mathbb{R}
 \end{defn} 
 
 For signals belonging to the pulse-stream model $\mathcal{M}^z_{K,F}$, Hedge and Baraniuk~\cite{Hedge_TSP_2011} have derived a sampling theorem where the number of measurements necessary for perfect reconstruction scales linearly with $K + F$ instead of $KF$~(standard CS). 
-In this work, we propose to extend the concept of pulse-stream models to time-of-flight imaging with an array of sensor elements, whose configuration is described on Figure~\ref{fig_pulse_echo}. 
-In such applications, the sensing process is divided into a transmit phase where one or several emitters are used to send a pulsed-wave in the medium, and a receive phase where the sensors are used to acquire the response of the medium to the previously transmitted pulsed wave. 
-Such a configuration covers many applications such as medical ultrasound imaging, non-destructive testing, seismic imaging, SONAR, LIDAR and synthetic aperture radar imaging.
+In this work, we propose to extend this model to time-of-flight imaging with an array of sensor elements, whose configuration is described on Figure~\ref{fig_pulse_echo}. 
+The sensing process is divided into a transmit phase where one or several emitters are used to send a pulsed-wave in the medium, and a receive phase where the sensors are used to acquire the response of the medium to the previously transmitted pulsed wave. 
+Such a configuration covers a wide range of applications such as medical ultrasound imaging, non-destructive evaluation, seismic imaging, sonar, lidar and synthetic aperture radar imaging.
 
 Formally, let us assume that the array is made of $N_{el}$ sensors, positioned at $\left(\vect{p}^i\right)_{i=1}^{N_{el}}$, as described on Figure~\ref{fig_pulse_echo}. 
 Let us also consider that the medium is made of $K$ targets positioned at $\left(\vect{r}^k\right)_{k=1}^K$. The signal $m_{i} \left(t\right)$ received at the $i$-th sensor can be expressed as:
@@ -161,24 +161,23 @@ The delay associated with the $k$-th target depends on its relative position wit
 \label{eq_usdelay}
 t_i^k = t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k -  \vect{p}^i \|_2}{c},
 \end{equation}
-where $c$ denotes the wave velocity in the medium, supposed to be constant, and $t_{Tx}\left(\vect{r}^k\right)$ is the transmit delay which depends on the transmit settings.
+where $c$ denotes the wave velocity in the medium, supposed to be constant, and $t_{Tx}\left(\vect{r}^k\right)$ is the transmit delay which depends on the transmit settings. Such model have been extensively used in medical ultrasound imaging~\cite{Chernyakova2014, Tur_TSP_2012, Bendory_TSP_2016}, non-destructive testing~\cite{Carcreff_UFFC_2014} and radar imaging~\cite{Ilan_TSP_2014, Baraniuk2007}. 
 
-This model have been extensively used in medical ultrasound imaging~\cite{Chernyakova2014, Tur_TSP_2012, Bendory_TSP_2016}, non-destructive testing~\cite{Carcreff_UFFC_2014} and radar imaging~\cite{Ilan_TSP_2014, Baraniuk2007}. 
-Starting from the model described in Equation~\eqref{eq_raw_data}, we consider inter-sensor dependencies in order to derive an additional structure of the array signals. 
+Starting from Equation~\eqref{eq_raw_data}, we consider inter-sensor dependencies in order to derive an additional structure of the array signals. 
 This structure, expressed as restrictions on the possible support of the array signals, leads us to define a new model, denoted as \textit{multi-channel pulse stream model}, from which we present a sampling theorem and a recovery algorithm.
 
 The remainder of the paper is organized as follows. 
 In Section~\ref{sec_pulsestreams_US}, the signal model is presented, with the corresponding sampling theorem and recovery algorithm. 
-Section~\ref{sec_exp} presents results on synthetic pulse streams as well as on \textit{in vivo} ultrasound images. Concluding remarks are given in Section~\ref{sec_concl}.
+Section~\ref{sec_exp} presents results on synthetic pulse streams as well as on real non-destructive evaluation signals. Concluding remarks are given in Section~\ref{sec_concl}.
 \section{Signal models for pulse streams in array imaging}
 \label{sec_pulsestreams_US}
-\subsection{Channel recovery from a pulse-stream model}
+\subsection{Signal recovery from the pulse-stream model}
 \label{subsec_US_pulsestream}
-From Equation~\eqref{eq_raw_data}, one may express the signal $m_i\left(t\right)$ as $m_i\left(t\right) = \left(s \ast h\right)\left(t\right)$, where $s \left(t\right) = \sum \limits_{k=1}^{K} a_k \delta\left(t - \ser{t_i}{k}\right)$ and $h\left(t\right)$ is the pulse. 
+From Equation~\eqref{eq_raw_data}, one may express the signal $m_i\left(t\right)$ as $m_i\left(t\right) = \left(s_i \ast h\right)\left(t\right)$, where $s_i \left(t\right) = \sum \limits_{k=1}^{K} a_k \delta\left(t - \ser{t_i}{k}\right)$ and $h\left(t\right)$ is the pulse. 
 
 Let us consider that the signal $m_i \left(t\right)$ is sampled at a rate $f_s$, leading to $N$ samples $ m_i \left(\ser{t}{i}\right)$, with $\ser{t}{i}= \ser{t}{0} + i/f_s$ for $i \in \left\lbrace 1,\dots,N \right\rbrace$.
 
-The vector $\vect{m}_i = \left[m_i\left(\ser{t}{1}\right),\dots,m_i\left(\ser{t}{N}\right)\right]^T \in \mathbb{R}^N$ belongs to the pulse-stream model $\mathcal{M}^z_{K,F}$ where $F$ denotes the size of the support of $\vect{h} \in \mathbb{R}^N$, supposed to be small compared to $N$, and $K$ the number of point-scatterers.
+The vector $\vect{m}_i = \left[m_i\left(\ser{t}{1}\right),\dots,m_i\left(\ser{t}{N}\right)\right]^T \in \mathbb{R}^N$ belongs to the pulse-stream model $\mathcal{M}^z_{K,F}$ where $F$ denotes the size of the support of $\vect{h} \in \mathbb{R}^N$, supposed to be small compared to $N$, and $K$ the number of point scatterers.
 
 Thus, one may be able to sample array signals at a rate dictated by Hedge and Baraniuk~\cite{Hedge_TSP_2011} while ensuring a perfect recovery using either model-based greedy approaches~\cite{Baraniuk2010} or $\ell_1$-minimization~\cite{candes11}. 
 In the proposed work, we have decided to focus on the latter. Since the pulse is supposed to be known, the following convex problem can be solved to retrieve $\vect{m}_i \in \mathbb{R}^M$ from noisy measurements $\vect{y} = \mathsf{\Phi} \vect{m}_i + \vect{n}$, with $\mathsf{\Phi} \in \mathbb{R}^{M \times N}$ a Gaussian i.i.d. matrix:
@@ -187,7 +186,7 @@ In the proposed work, we have decided to focus on the latter. Since the pulse is
 \min_{\bar{\vect{s}}}\|\bar{\vect{s}}\|_{1}
 \textnormal{ subject to }\| \bm{y}-\mat{\Phi H}\bar{\vect{s}}\|_{2}\leq\epsilon,
 \end{equation}
-where $\mat{H}$ is a circulant matrix which contains time-shifted replicas of the pulse, $\vect{m}_i = \mat{H} \vect{s}$, $\vect{s}$ is the $K$-sparse spike train and $\epsilon \in \mathbb{R}_{+}$ accounts for the noise-level.
+where $\mat{H}$ is a circulant matrix which contains time-shifted replicas of the pulse, $\vect{s}$ is a $K$-sparse vector and $\epsilon \in \mathbb{R}_{+}$ accounts for the noise-level.
 \subsection{Multi-channel pulse-stream model}
 \label{subsec_US_multiplechannels}
 The model described in Section~\ref{subsec_US_pulsestream} is suited to single channel reconstructions. 
@@ -208,11 +207,10 @@ The support $\sigma \left(\vect{s}_i\right)$ of the spike train $\vect{s}_i$ cor
 \end{theorem}
 In the above theorem, $\lceil.\rceil$ designates the round value.
 \begin{proof}
-	Let us suppose that $x_j \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_j}{k}\right)$ and $x_i \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_i}{k}\right)$. From Equation~\eqref{eq_usdelay}, one may deduce the following:
+	Let us suppose that $s_j \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_j}{k}\right)$ and $s_i \left(t\right) = \sum_{k=1}^{K} a_k \delta \left(t - \ser{t_i}{k}\right)$. From Equation~\eqref{eq_usdelay}, one may deduce the following:
 	\begin{align*}
-	\ser{t_j}{k} &= t_{Tx}\left(\vect{r}^k\right) + t_{Rx}\left(\vect{r}^k, \ser{\vect{r}_{ts}}{j}\right) \\
-	&= t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \ser{\vect{r}_{ts}}{j} \|_2}{c}\\
-	&\leq  t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \ser{\vect{r}_{ts}}{i} \|_2}{c} + \frac{\Delta_{ij}}{c}\\
+	\ser{t_j}{k} &= t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \vect{p}^j \|_2}{c}\\
+	&\leq  t_{Tx}\left(\vect{r}^k\right) + \frac{\|\vect{r}^k - \vect{p}^i \|_2}{c} + \frac{\Delta_{ij}}{c}\\
 	&\leq \ser{t_i}{k} + \frac{\Delta_{ij}}{c}.
 	\end{align*}
 	Reversely, one can deduce that $\ser{t_j}{k} \geq \ser{t_i}{k} - \frac{\Delta_{ij}}{c}$, which leads to $\ser{t_i}{k} \in \left[\ser{t_j}{k} -\frac{\Delta_{ij}}{c}, \ser{t_j}{k} +\frac{\Delta_{ij}}{c}\right]$. Thus, by simple multiplication with $f_s$, one may deduce that:
@@ -278,10 +276,9 @@ In the theorem above $|S|$ denotes the cardinality of the set $S$.
 	Introducing the above results in Equation~\eqref{eq_sampling_Hedge} leads to the results of Theorem~\ref{th_stream_pulse_us}.
 \end{proof}
 The main benefit of Theorem~\ref{th_stream_pulse_us} is that the number of measurements required for perfect reconstruction are $\mathcal{O}\left(K \log \left(|S|/K\right)\right)$, instead of $\mathcal{O}\left(K \log \left(N/K\right)\right)$ in the case of the single-channel pulse stream model.
-
-Theorem~\ref{th_stream_pulse_us} can be interpreted in light of the D-RIP property introduced by Candes~\etal{}~\cite{candes11}. 
+Interestingly, such a reduction can be interpreted in light of the D-RIP property introduced by Candes~\etal{}~\cite{candes11}. 
 Indeed, a signal $\vect{z} \in \mathcal{U}^z_{K,F}$ is $K$-sparse in the convolutional~(coherent) dictionary $\mat{H}$, and can be acquired with $\mathcal{O} \left(K \log \left(N / K\right)\right)$ Gaussian i.i.d. measurements~\cite{candes11}. 
-In addition, $\vect{z} \in \mathcal{U}^z_{K,F}$ implies that $\sigma \left(s\right) \in S$ which means that the recovery problem can be solved on $\mathbb{R}^{|S|}$ rather than $\mathbb{R}^N$ and, consequently, that the signal can be acquired with $\mathcal{O} \left(K \log \left(|S| / K\right)\right)$ Gaussian i.i.d. measurements. 
+In addition, $\vect{z} \in \mathcal{U}^z_{K,F}$ implies that $\sigma \left(s\right) \in S$ which means that the recovery problem can be solved in $\mathbb{R}^{|S|}$ rather than $\mathbb{R}^N$ and, consequently, that the signal can be acquired with $\mathcal{O} \left(K \log \left(|S| / K\right)\right)$ Gaussian i.i.d. measurements. 
 
 \subsection{Recovery of multi-channel pulse-stream signals}
 \label{subsec_recovery_pulse_stream}
@@ -291,13 +288,13 @@ Let us consider that the signal $\vect{y} = \mat{\Phi} \vect{m}$ is measured, wh
 As stated in Section~\ref{subsec_sampling_pulse_stream}, the recovery problem in $\mathbb{R}^N$ can be recast as the following recovery problem in $\mathbb{R}^{|S|}$:
 \begin{equation}
 \label{eq_problem_support}
-\textnormal{Find } \vect{\alpha} \in \mathbb{R}^{|S|} \textnormal{ such that } \| \vect{y} - \left(\mat{\Phi H}\right)_{|S}\vect{\alpha}\|_2 \leq \epsilon, \; \| \vect{\alpha} \|_0 = K, 
+\textnormal{Find } \vect{\alpha} \in \mathbb{R}^{|S|} \textnormal{ such that } \| \vect{y} - \left(\mat{\Phi H}\right)_{|S}\vect{\alpha}\|_2 \leq \epsilon, \; \| \vect{\alpha} \|_0 \leq K, 
 \end{equation}
 where $\epsilon \in \mathbb{R}_{+}$ accounts for the noise level and $\left(\mat{\Phi H}\right)_{|S} \in \mathbb{R}^{M \times |S|}$ corresponds to a submatrix of $\mat{\Phi H}$ formed by the columns indexed by the support $S$. 
 Depending on the ratio between the number of measurements $M$, the size of the support $S$ and the noise level, two different recovery procedures may be considered.
 \subsubsection{Recovery by least-square minimization}
 \label{subsec_ls_recovery}
-When $M \leq |S|$ and $\epsilon=0$, Problem~\eqref{eq_problem_support} involves an overcomplete matrix $\left(\mat{\Phi H}\right)_{|S} \in \mathbb{R}^{M \times |S|}$ and can be solved by least-square minimization. 
+When $M \geq |S|$ and $\epsilon=0$, Problem~\eqref{eq_problem_support} involves an overcomplete matrix $\left(\mat{\Phi H}\right)_{|S} \in \mathbb{R}^{M \times |S|}$ and can be solved by simple least-square minimization. 
 In this case, the solution $\vect{\alpha}^\star$ of Problem~\eqref{eq_problem_support} is expressed as:
 \begin{equation}
 \label{eq_solution_LS}
@@ -356,38 +353,40 @@ Regarding the optimization algorithm, the maximum number of iterations is set to
 
 From Figure~\ref{fig_synth_US}, it is clear that the multi-channel configurations outperform the 1-channel configuration. 
 Regarding Figures~\ref{fig_synth_US_nmse}~and~\ref{fig_synth_US_nmse_2lambda}, it can be noticed that, for a higher inter-sensor spacing, the \num{5}-channel and \num{10}-channel scenarios outperform the \num{2}-channel scenario. 
-Indeed, when the spacing is higher, the dimension of the subspaces $S_i$ is increased and the dimensionality reduction induced by Theorem~\ref{th_multisens_subspace} has a higher impact.
+Indeed, when the spacing is higher, the dimension of the subspaces $S_i$ is increased and the dimensionality reduction induced by Theorem~\ref{th_multisens_subspace}, compared to Theorem~\ref{th_2sens_subspace}, has a higher impact.
 
 Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust to small amount of noise~(SNR = \SI{40}{\decibel}). 
 For this experiment, the settings are the same as the ones used for the noiseless experiment. 
 A small amount of Gaussian noise is added to the element raw-data of each sensor, leading to the signal displayed on Figure~\ref{fig_channel_noisy}. Figures~\ref{fig_res_1chan}~and ~\ref{fig_res_5chan} show the recovered signals for the \num{1}-channel and \num{5}-channels scenarios, respectively, for a number of measurements $M=160$. 
 It can be seen that the signal recovered from the \num{5}-channel scenario is closer to the original signal than the one recovered from the \num{1}-channel scenario.
 
-\subsection{\textit{In vivo} ultrasound images}
+\subsection{Real non-destructive-evaluation signals}
 \label{subsec_invivo_images}
-Element raw-data of an \textit{in vivo} carotid, for 1 PW insonification with normal incidence, have been acquired with an Ultrasonix scanner~(Ultrasonix Analogic Ultrasound, Richmond, BC, Canada), equipped with a linear probe composed of \num{128} transducer-elements, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth, with an inter-sensor spacing of \SI{0.46}{\milli\metre}. The sampling frequency has been set to \SI{40}{\mega\hertz}. 
+An aluminum block containg side drilled holes (SDH) located at different depths have been insonified with 1 plane wave~(normal incidence) using an open phased-array platform~(OEM-PA, Advanced OEM Solutions, Cincinnati, Ohio, USA), equipped with a linear probe~(Imasonic SAS, Voray-sur-l'Ognon, France) composed of \num{64} elements with \SI{0.93}{\milli\metre} pitch, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth. The sampling frequency has been set to \SI{50}{\mega\hertz}. 
 
-After acquisition, the element raw-data are imported on MATLAB~(The Mathworks, Natic, MA) and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.06$, with $N=1519$. The pulse is supposed to be known and equal to the one described in Section~\ref{subsec_synth_pulse}. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). Concerning the optimization algorithm, the maximum number of iterations is set to \num{2000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
+After acquisition, the element raw-data are imported on MATLAB~(The Mathworks, Natic, MA) and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.03$~(\SI{7.5}{\percent} of the Nyquist frequency). The pulse is approximated as a convolution between a \num{0.5}-cycle excitation signal and a \num{1}-cycle Gaussian-modulated sinusoidal impulse response. 
 
-Once the raw data are reconstructed from compressed measurements, standard US beamforming is applied to generate the radio-frequency~(RF) image. The envelope is extracted through Hilbert transform, normalized and log-compressed~(dynamic range of \SI{40}{\decibel}) to obtain the B-mode image. 
+In the 1-channel scenario, all the channels are reconstructed in parallel. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). The first channel is reconstructed from a compression ratio $M/N = 0.5$ in order to have a relevant first estimation of the support of the spike train. Concerning the optimization algorithm, the maximum number of iterations is set to \num{1000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
 
-Figure~\ref{fig_carotid}, which displays the recovered B-mode images, shows an increase of the image quality in the multi-channel scenario. This increase is quantified by a difference of \SI{1}{\decibel} in the peak-signal-to-noise ratio~(PSNR) between the 1- and the multi-channel reconstructions. 
+Once the raw data are reconstructed from compressed measurements, standard delay-and-sum beamforming with linear interpolation for the delay calculation~\cite{montaldo_uffc_2014}, is applied to generate the radio-frequency image. The envelope is extracted through Hilbert transform and normalized to obtain the B-mode image. 
+
+Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}) and shows that the multi-channel scenario leads to a nearly perfect reconstrucion~(PSNR~=~\SI{29.6}{\decibel}) while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{26.1}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/USStreams}}. 
 %%%%%%%%%%%% FIGURE %%%%%%%%%%%
 \setlength{\CohSubFigWidth}{0.24\textwidth}
-\settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{Figures/carotid_ref.pdf}}
+\settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{Figures/cnd_ref.pdf}}
 \begin{figure}[htb]
 	% Maximum length
 	\centering
 	\hfill%
-	\subcaptionbox{\label{fig_carotid_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_ref.pdf}}\hfill%
-	\subcaptionbox{\label{fig_carotid_1cha}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_rec_1channel.pdf}}\hfill%
-	\subcaptionbox{\label{fig_carotid_multcha}}{\includegraphics[height=\CohSubFigHeight]{Figures/carotid_rec_multichannels.pdf}}\hfill%
-	\caption{(a) Original B-mode image of the carotid; Recovered B-mode image from $M=91$ measurements (b) in a \num{1}-channel scenario~(PSNR~=~\SI{28.4}{\decibel}); (c) in a \num{2}-channels scenario~(PSNR~=~\SI{29.4}{\decibel}).}
+	\subcaptionbox{\label{fig_carotid_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_ref.pdf}}\hfill%
+	%\subcaptionbox{\label{fig_carotid_1cha}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_rec_1channel.pdf}}\hfill%
+	\subcaptionbox{\label{fig_carotid_multcha}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_rec_2channels.pdf}}\hfill%
+	\caption{(a) Original B-mode image; Recovered B-mode image from \SI{3}{\percent} measurements in a \num{2}-channels scenario~(PSNR~=~\SI{29.6}{\decibel}).}
 	\label{fig_carotid}
 \end{figure}
 \section{Conclusion}
 \label{sec_concl}
-In this paper, we have presented an extension of the pulse-stream model to time-of-flight imaging with an array of sensors. The proposed model, coined as \textit{multi-channel pulse-stream model}, accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model which enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and \textit{in vivo} signals.
+In this paper, we have presented an extension of the pulse-stream model coined as \textit{multi-channel pulse-stream model}. It accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model which enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and real non-destructive-evaluation signals.
 
 
 
@@ -429,7 +428,7 @@ In this paper, we have presented an extension of the pulse-stream model to time-
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
 \bibliographystyle{IEEEbib}
-\bibliography{IEEEabrv,SPL2017}
+\bibliography{IEEEabrv,icassp_2017}
 
 % biography section
 % 
