@@ -169,7 +169,7 @@ This structure, expressed as restrictions on the possible support of the array s
 The remainder of the paper is organized as follows. 
 In Section~\ref{sec_pulsestreams_US}, the signal model is presented, with the corresponding sampling theorem and recovery algorithm. 
 Section~\ref{sec_exp} presents results on synthetic pulse streams as well as on real non-destructive evaluation signals. Concluding remarks are given in Section~\ref{sec_concl}.
-\section{Signal models for pulse streams in array imaging}
+\section{Pulse streams in array imaging}
 \label{sec_pulsestreams_US}
 \subsection{Signal recovery from the pulse-stream model}
 \label{subsec_US_pulsestream}
@@ -235,8 +235,8 @@ We can go further than the two-channel scenario by considering that we have prio
 	This is a simple generalization of Theorem~\ref{th_2sens_subspace}. Let us denote as $\left(\vect{s}_j\right)_{j=1}^n$ the spike trains associated with the $n$ considered sensors.
 	Then, Theorem~\ref{th_2sens_subspace} states that:
 	\begin{align*}
-	 \forall j \in \left\lbrace 1,\dots,n \right \rbrace &, \; \sigma \left(\vect{s}_i\right) \in S_{ij} \\
-	 \Leftrightarrow & \sigma \left(\vect{s}_i\right) \in \bigcap \limits_{j=1}^{n} S_{ij}. 
+	 \forall j \in \left\lbrace 1,\dots,n \right \rbrace &, \; \sigma \left(\vect{s}_i\right) \in S_{ij}
+	 \Leftrightarrow  \sigma \left(\vect{s}_i\right) \in \bigcap \limits_{j=1}^{n} S_{ij}. 
 	\end{align*} 
 \end{proof}
 In this case, the support $\sigma\left(\vect{s}_i\right)$ is included into a smaller subspace, taking into account the dependencies between the considered sensor and the $n$ other ones. 
@@ -309,7 +309,7 @@ In a more general case, $\vect{\alpha}^\star$ can be recovered by solving the fo
 \min_{\vect{\alpha} \in \mathbb{R}^{|S|}}\|\vect{\alpha}\|_{1}
 \textnormal{ subject to }\| \bm{y}-\left(\mat{\Phi H}\right)_{|S}\vect{\alpha}\|_{2}\leq\epsilon.
 \end{equation}
-Problem~\eqref{eq_l1_BPDN_support} is solved using state-of-the-art convex optimization algorithms.
+%Problem~\eqref{eq_l1_BPDN_support} is solved using state-of-the-art convex optimization algorithms.
 \section{Experiments}
 \label{sec_exp}
 We now present the results of experiments that validate the proposed approach and show its benefits.
@@ -354,7 +354,6 @@ Regarding the optimization algorithm, the maximum number of iterations is set to
 From Figure~\ref{fig_synth_US}, it is clear that the multi-channel configurations outperform the 1-channel configuration. 
 Regarding Figures~\ref{fig_synth_US_nmse}~and~\ref{fig_synth_US_nmse_2lambda}, it can be noticed that, for a higher inter-sensor spacing, the \num{5}-channel and \num{10}-channel scenarios outperform the \num{2}-channel scenario. 
 Indeed, when the spacing is higher, the dimension of the subspaces $S_i$ is increased and the dimensionality reduction induced by Theorem~\ref{th_multisens_subspace}, compared to Theorem~\ref{th_2sens_subspace}, has a higher impact.
-
 Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust to small amount of noise~(SNR = \SI{40}{\decibel}). 
 For this experiment, the settings are the same as the ones used for the noiseless experiment. 
 A small amount of Gaussian noise is added to the element raw-data of each sensor, leading to the signal displayed on Figure~\ref{fig_channel_noisy}. Figures~\ref{fig_res_1chan}~and ~\ref{fig_res_5chan} show the recovered signals for the \num{1}-channel and \num{5}-channels scenarios, respectively, for a number of measurements $M=160$. 
@@ -363,27 +362,25 @@ It can be seen that the signal recovered from the \num{5}-channel scenario is cl
 \subsection{Real non-destructive-evaluation signals}
 \label{subsec_invivo_images}
 An aluminum block containg side drilled holes (SDH) located at different depths have been insonified with 1 plane wave~(normal incidence) using an open phased-array platform~(OEM-PA, Advanced OEM Solutions, Cincinnati, Ohio, USA), equipped with a linear probe~(Imasonic SAS, Voray-sur-l'Ognon, France) composed of \num{64} elements with \SI{0.93}{\milli\metre} pitch, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth. The sampling frequency has been set to \SI{50}{\mega\hertz}. 
-
 After acquisition, the element raw-data are imported on MATLAB~(The Mathworks, Natic, MA) and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.03$~(\SI{7.5}{\percent} of the Nyquist frequency). The pulse is approximated as a convolution between a \num{0.5}-cycle excitation signal and a \num{1}-cycle Gaussian-modulated sinusoidal impulse response. 
-
 In the 1-channel scenario, all the channels are reconstructed in parallel. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). The first channel is reconstructed from a compression ratio $M/N = 0.5$ in order to have a relevant first estimation of the support of the spike train. Concerning the optimization algorithm, the maximum number of iterations is set to \num{1000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
-
 Once the raw data are reconstructed from compressed measurements, standard delay-and-sum beamforming with linear interpolation for the delay calculation~\cite{montaldo_uffc_2014}, is applied to generate the radio-frequency image. The envelope is extracted through Hilbert transform and normalized to obtain the B-mode image. 
 
-Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}) and shows that the multi-channel scenario leads to a nearly perfect reconstrucion~(PSNR~=~\SI{29.6}{\decibel}) while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{26.1}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/USStreams}}. 
+Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}) and shows that the multi-channel scenario leads to a nearly perfect reconstrucion~(PSNR~=~\SI{29.6}{\decibel}) while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{26.1}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/USStreams}}.
 %%%%%%%%%%%% FIGURE %%%%%%%%%%%
 \setlength{\CohSubFigWidth}{0.24\textwidth}
 \settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{Figures/cnd_ref.pdf}}
 \begin{figure}[htb]
 	% Maximum length
-	\centering
 	\hfill%
 	\subcaptionbox{\label{fig_carotid_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_ref.pdf}}\hfill%
-	%\subcaptionbox{\label{fig_carotid_1cha}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_rec_1channel.pdf}}\hfill%
 	\subcaptionbox{\label{fig_carotid_multcha}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_rec_2channels.pdf}}\hfill%
-	\caption{(a) Original B-mode image; Recovered B-mode image from \SI{3}{\percent} measurements in a \num{2}-channels scenario~(PSNR~=~\SI{29.6}{\decibel}).}
+	\caption{(a) Original B-mode image; (b) Recovered B-mode image from \SI{3}{\percent} measurements in a \num{2}-channels scenario~(PSNR~=~\SI{29.6}{\decibel}).}
 	\label{fig_carotid}
 \end{figure}
+\subsection{Limitations of the proposed method}
+\label{subsec_limitations}
+The current method requires a perfect estimation of the support in order to perform efficient reconstructions, impossible to achieve in real scenario. To address this problem, the non-uniform sparse framework introduced by Khajehnejad~\etal{}~\cite{Khajehnejad_TSP_2011} will be explored in a future work. Another limitation of the current approach is the perfect knowledge of the pulse that can be tackled by exploring blind-deconvolution approaches~\cite{Hedge_TSP_2011, Demirli2001, Zhao_IUS_2016}.
 \section{Conclusion}
 \label{sec_concl}
 In this paper, we have presented an extension of the pulse-stream model coined as \textit{multi-channel pulse-stream model}. It accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model which enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and real non-destructive-evaluation signals.
