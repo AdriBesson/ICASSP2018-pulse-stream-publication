@@ -284,7 +284,6 @@ In addition, $\vect{z} \in \mathcal{U}^z_{K,F}$ implies that $\sigma \left(s\rig
 \label{subsec_recovery_pulse_stream}
 As described in Section~\ref{subsec_US_pulsestream}, the signal $\vect{m} = \vect{s} \ast \vect{h}$, $\vect{m} \in \mathcal{U}^z_{K,F}$ can be written as $\vect{m} = \mat{H} \vect{s}$. 
 Let us consider that the signal $\vect{y} = \mat{\Phi} \vect{m}$ is measured, where $\mat{\Phi} \in \mathbb{R}^{M \times N}$ satisfies the requirements of Theorem~\ref{th_stream_pulse_us}. 
-
 As stated in Section~\ref{subsec_sampling_pulse_stream}, the recovery problem in $\mathbb{R}^N$ can be recast as the following recovery problem in $\mathbb{R}^{|S|}$:
 \begin{equation}
 \label{eq_problem_support}
@@ -358,14 +357,12 @@ Figure~\ref{fig_synth_noisy} demonstrates that the proposed algorithm is robust 
 For this experiment, the settings are the same as the ones used for the noiseless experiment. 
 A small amount of Gaussian noise is added to the element raw-data of each sensor, leading to the signal displayed on Figure~\ref{fig_channel_noisy}. Figures~\ref{fig_res_1chan}~and ~\ref{fig_res_5chan} show the recovered signals for the \num{1}-channel and \num{5}-channels scenarios, respectively, for a number of measurements $M=160$. 
 It can be seen that the signal recovered from the \num{5}-channel scenario is closer to the original signal than the one recovered from the \num{1}-channel scenario.
-
 \subsection{Real non-destructive-evaluation signals}
 \label{subsec_invivo_images}
-An aluminum block containg side drilled holes (SDH) located at different depths have been insonified with 1 plane wave~(normal incidence) using an open phased-array platform~(OEM-PA, Advanced OEM Solutions, Cincinnati, Ohio, USA), equipped with a linear probe~(Imasonic SAS, Voray-sur-l'Ognon, France) composed of \num{64} elements with \SI{0.93}{\milli\metre} pitch, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth. The sampling frequency has been set to \SI{50}{\mega\hertz}. 
-After acquisition, the element raw-data are imported on MATLAB~(The Mathworks, Natic, MA) and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.03$~(\SI{7.5}{\percent} of the Nyquist frequency). The pulse is approximated as a convolution between a \num{0.5}-cycle excitation signal and a \num{1}-cycle Gaussian-modulated sinusoidal impulse response. 
+An aluminum block containing side drilled holes located at different depths have been insonified with 1 plane wave~(normal incidence) using an open phased-array platform~(OEM-PA, Advanced OEM Solutions, Cincinnati, Ohio, USA), equipped with a linear probe~(Imasonic SAS, Voray-sur-l'Ognon, France) composed of \num{64} elements with \SI{0.93}{\milli\metre} pitch, working at \SI{5}{\mega\hertz} with \SI{100}{\percent} bandwidth. The sampling frequency has been set to \SI{50}{\mega\hertz} and the speed of sound is \SI{6300}{\meter\per\second} (speed of sound in aluminum). 
+After acquisition, the element raw-data are imported on MATLAB and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.03$~(\SI{7.5}{\percent} of the Nyquist frequency). The pulse is approximated as a convolution between a \num{0.5}-cycle excitation signal and a \num{1}-cycle Gaussian-modulated sinusoidal impulse response. 
 In the 1-channel scenario, all the channels are reconstructed in parallel. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). The first channel is reconstructed from a compression ratio $M/N = 0.5$ in order to have a relevant first estimation of the support of the spike train. Concerning the optimization algorithm, the maximum number of iterations is set to \num{1000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
 Once the raw data are reconstructed from compressed measurements, standard delay-and-sum beamforming with linear interpolation for the delay calculation~\cite{montaldo_uffc_2014}, is applied to generate the radio-frequency image. The envelope is extracted through Hilbert transform and normalized to obtain the B-mode image. 
-
 Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}) and shows that the multi-channel scenario leads to a nearly perfect reconstrucion~(PSNR~=~\SI{29.6}{\decibel}) while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{26.1}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/USStreams}}.
 %%%%%%%%%%%% FIGURE %%%%%%%%%%%
 \setlength{\CohSubFigWidth}{0.24\textwidth}
@@ -383,7 +380,7 @@ Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_caro
 The current method requires a perfect estimation of the support in order to perform efficient reconstructions which is very difficult to achieve in real scenarios. To address this problem, the non-uniform sparse framework introduced by Khajehnejad~\etal{}~\cite{Khajehnejad_TSP_2011} will be explored in a future work. Another limitation of the current approach is the perfect knowledge of the pulse that can be tackled by exploring blind-deconvolution approaches~\cite{Hedge_TSP_2011, Demirli2001, Zhao_IUS_2016}.
 \section{Conclusion}
 \label{sec_concl}
-In this paper, we have presented an extension of the pulse-stream model coined as \textit{multi-channel pulse-stream model}. It accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model which enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and real non-destructive-evaluation signals.
+We have presented an extension of the pulse-stream model coined as \textit{multi-channel pulse-stream model}. It accounts for the inter-sensor dependencies as an additional structure to the general pulse-stream model and enables us to quantitatively estimate the number of random projections necessary to sample such signals. We also suggest a reconstruction method based on $\ell_1$-minimization on the reduced signal support and illustrates its benefits on synthetic and real non-destructive-evaluation signals.
 
 
 
