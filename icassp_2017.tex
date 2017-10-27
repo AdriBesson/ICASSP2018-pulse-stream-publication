@@ -360,7 +360,7 @@ An aluminum block containing side drilled holes located at different depths have
 After acquisition, the element raw-data are imported on MATLAB and compressed using a Gaussian i.i.d. matrix $\mat{\Phi} \in \mathbb{R}^{M \times N}$, with a compression ratio $M/N = 0.03$~(\SI{7.5}{\percent} of the Nyquist frequency). The pulse is approximated as a convolution between a \num{0.5}-cycle excitation signal and a \num{1}-cycle Gaussian-modulated sinusoidal impulse response. 
 In the 1-channel scenario, all the channels are reconstructed in parallel. In the multi-channel scenario, a sequential reconstruction is achieved where each channel is recovered with prior knowledge on the support of the spike train corresponding to the neighbouring channel~(obtained from the previous reconstruction). The first channel is reconstructed from a compression ratio $M/N = 0.5$ in order to have a relevant first estimation of the support of the spike train. Concerning the optimization algorithm, the maximum number of iterations is set to \num{1000} and $\epsilon = 0.3 \| \vect{y} \|_2$. 
 Once the raw data are reconstructed from compressed measurements, standard delay-and-sum beamforming~\cite{montaldo_uffc_2014} is applied to generate the radio-frequency image. The envelope is extracted through Hilbert transform and normalized to obtain the B-mode image. 
-Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) obtained with no compression and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}). It shows that the multi-channel scenario leads to a nearly perfect reconstrucion, with a peak-signal-to-noise-ratio~(PSNR), calculated against the reference image, of \SI{29.6}{\decibel} while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{26.1}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/USStreams}}.
+Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_carotid_ref}) obtained with no compression and the recovered B-mode image in the multi-channel scenario~(Fig.~\ref{fig_carotid_multcha}). It shows that the multi-channel scenario leads to a nearly perfect reconstrucion, with a peak-signal-to-noise-ratio~(PSNR), calculated against the reference image, of \SI{28.3}{\decibel} while the \num{1}-channel scenario leads to significantly lower image quality~(PSNR~=~ \SI{25.5}{\decibel})\footnote{Code available at \url{https://github.com/AdriBesson/ICASSP2018-pulse-streams}}.
 %%%%%%%%%%%% FIGURE %%%%%%%%%%%
 \setlength{\CohSubFigWidth}{0.24\textwidth}
 \settoheight{\CohSubFigHeight}{\includegraphics[width=\CohSubFigWidth]{Figures/cnd_ref.pdf}}
@@ -369,7 +369,7 @@ Figure~\ref{fig_carotid} displays the reference B-mode image~(Fig.~\ref{fig_caro
 	\hfill%
 	\subcaptionbox{\label{fig_carotid_ref}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_ref.pdf}}\hfill%
 	\subcaptionbox{\label{fig_carotid_multcha}}{\includegraphics[height=\CohSubFigHeight]{Figures/cnd_rec_2channels.pdf}}\hfill%
-	\caption{(a) Original B-mode image; (b) Recovered B-mode image from \SI{3}{\percent} measurements in a \num{2}-channels scenario~(PSNR~=~\SI{29.6}{\decibel}).}
+	\caption{(a) Original B-mode image; (b) Recovered B-mode image from \SI{3}{\percent} measurements in a \num{2}-channels scenario~(PSNR~=~\SI{28.3}{\decibel}).}
 	\label{fig_carotid}
 \end{figure}
 \subsection{Limitations of the proposed method}
